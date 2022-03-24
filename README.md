@@ -10,6 +10,8 @@ Comandos de ejecucion para Next.js:
 >  `npm start`
 >    Runs the built app in production mode.
 
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
