@@ -1,14 +1,24 @@
-import { Container, Navbar } from "react-bootstrap";
+import { Box, Container, Stack, Text } from "@chakra-ui/react";
 import { BsShop } from "react-icons/bs";
 
 export default function Footer() {
   return (
-    <>
-      <Navbar bg="primary" variant="dark">
-        <Container className="justify-content-center rb-center">
-          <Navbar.Brand><BsShop/> Difficult / 2022</Navbar.Brand>
-        </Container>
-      </Navbar>
-    </>
+    <Box
+      bg="green.700"
+      color="gray.200"
+    >
+      <Container
+        as={Stack}
+        maxW={"6xl"}
+        py={4}
+        direction="row"
+        spacing={4}
+        justify="center"
+        align="center"
+      >
+        <BsShop/>
+        <Text>Difficult / 2022</Text>
+      </Container>
+    </Box>
   );
 }
