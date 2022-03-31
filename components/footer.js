@@ -6,6 +6,7 @@ export default function Footer() {
     <Box
       bg="green.700"
       color="gray.200"
+      w='100vw'
     >
       <Container
         as={Stack}
