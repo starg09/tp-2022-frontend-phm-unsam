@@ -1,11 +1,15 @@
 import {
   Box,
+  Button,
   Checkbox,
   Divider,
   Heading,
   HStack,
+  Image,
   Radio,
   RadioGroup,
+  SimpleGrid,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -18,9 +22,57 @@ export default function Home() {
   const todosOrigenes = checkedItems.every(Boolean);
   const algunosOrigenes = checkedItems.some(Boolean) && !todosOrigenes;
 
+  const itemsTemp = [
+    {
+      id: 1,
+      nombre: "Acme rústico",
+      imagen: "",
+      puntaje: 2,
+      precio: 2536.55,
+      origen: "Argentina",
+      descripcion: "Porcelanato rústico marca Acme semi satinado 36 x 36"
+    },
+    {
+      id: 2,
+      nombre: "Acme arena",
+      imagen: "",
+      puntaje: 3,
+      precio: 1987.37,
+      origen: "Argentina",
+      descripcion: "Porcelanato arena marca Acme semi satinado 36 x 36"
+    },
+    {
+      id: 3,
+      nombre: "Acme beteado",
+      imagen: "",
+      puntaje: 1,
+      precio: 2996.99,
+      origen: "Argentina",
+      descripcion: "Porcelanato beteado marca Acme satinado 36 x 36"
+    },
+    {
+      id: 4,
+      nombre: "Adla blanco",
+      imagen: "",
+      puntaje: 4,
+      precio: 8836.77,
+      origen: "Argentina",
+      descripcion: "Pintura para interiores color rojo marca Adla x 20 litros"
+    },
+    {
+      id: 5,
+      nombre: "Acme rústico dark",
+      imagen: "",
+      puntaje: 4,
+      precio: 2536.55,
+      origen: "Argentina",
+      descripcion: "Porcelanato rústico oscuro marca Acme semi satinado 36 x 36"
+    },
+  ]
+
   return (
     <HStack minH="80vh" alignItems="stretch" bg="orange.200">
-      <Box w="15%" p={3}>
+      <Box w="20%" p={3}>
         <VStack
           p={4}
           alignContent="flex-start"
@@ -88,6 +140,25 @@ export default function Home() {
           </VStack>
         </VStack>
       </Box>
+      <SimpleGrid columns={4} w="80%" maxH="100%" overflowY="auto" p={3}>
+        {itemsTemp.map( i => (
+          <Box minH="40vh" size="full" m={5} borderRadius="2vh" bg="green.400">
+            <VStack my={5} alignItems="flex-start">
+              <Image alignSelf="center" w="60%" h="auto" src={i.imagen ? i.imagen : "img_placeholder.png"}/>
+              <Divider py={1} />
+              <HStack px={4} fontSize="sm" w="full" justifyContent="space-between">
+                <Text>{i.nombre}</Text>
+                <Text>{i.puntaje}*</Text>
+              </HStack>
+              <Heading alignSelf="center" size="lg">${i.precio}</Heading>
+              <Text px={4} fontSize="xs">Origen: {i.origen ? i.origen : "Desconocido"}</Text>
+              <Text px={4} fontSize="sm" fontStyle="italic">{i.descripcion}</Text>
+              <Button alignSelf="center" colorScheme="purple">Agregar al carrito</Button>
+            </VStack>
+          </Box>
+        )
+        )}
+      </SimpleGrid>
     </HStack>
   );
 }
