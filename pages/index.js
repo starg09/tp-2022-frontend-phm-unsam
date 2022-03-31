@@ -186,7 +186,7 @@ export default function Home() {
                   justifyContent="space-between"
                 >
                   <Text>{i.nombre}</Text>
-                  <Text>{i.puntaje}*</Text>
+                  <Text>{i.puntaje}*</Text> {/* TODO: Usar estrellas */}
                 </HStack>
                 <Heading alignSelf="center" size="lg">
                   ${i.precio}
