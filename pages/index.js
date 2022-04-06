@@ -16,13 +16,15 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { productosService } from "../services/productos.service";
 
 export default function Home() {
   const [puntaje, setPuntaje] = useState("0");
 
   //TODO: Generar este estado en base a mock data (y luego al backend).
   const [checkedItems, setCheckedItems] = useState([false, false]);
+  const [itemsReal, set_itemsReal] = useState([])
   const todosOrigenes = checkedItems.every(Boolean);
   const algunosOrigenes = checkedItems.some(Boolean) && !todosOrigenes;
 
@@ -74,6 +76,15 @@ export default function Home() {
         "Porcelanato rústico oscuro marca Acme semi satinado 36 x 36",
     },
   ];
+
+  async function arrancar(){
+    const llamado = await productosService.getProductos()
+    console.log(llamado)
+    set_itemsReal([...llamado])
+    }
+  
+
+  useEffect( () => { arrancar() }, [] )
 
   return (
     <VStack minH="80vh" bg="orange.200">
@@ -163,7 +174,7 @@ export default function Home() {
           </VStack>
         </Box>
         <SimpleGrid columns={4} w="80%" maxH="100%" overflowY="auto" p={3}>
-          {itemsTemp.map((i) => (
+          {itemsReal.map((i) => (
             <Box
               minH="40vh"
               size="full"
@@ -185,17 +196,17 @@ export default function Home() {
                   w="full"
                   justifyContent="space-between"
                 >
-                  <Text>{i.nombre}</Text>
-                  <Text>{i.puntaje}*</Text> {/* TODO: Usar estrellas */}
+                  <Text>{i.nombreDto}</Text>
+                  <Text>{i.puntajeDto}*</Text> {/* TODO: Usar estrellas */}
                 </HStack>
                 <Heading alignSelf="center" size="lg">
-                  ${i.precio}
+                  ${i.precioDto}
                 </Heading>
                 <Text px={4} fontSize="xs">
-                  Origen: {i.origen ? i.origen : "Desconocido"}
+                  Origen: {i.paisOrigenDto ? i.paisOrigenDto : "Desconocido"}
                 </Text>
                 <Text px={4} fontSize="sm" fontStyle="italic">
-                  {i.descripcion}
+                  {i.descripcionDto}
                 </Text>
                 <Button alignSelf="center" colorScheme="purple">
                   Agregar al carrito
