@@ -5,6 +5,7 @@ import Perfil from './perfil'
 import PerfilDeUsuario from '../pages/perfilDeUsuario'
 import Carrito from './carrito'
 import { Flex, Spacer } from '@chakra-ui/react'
+import TablaProducto from './tablaProducto'
 
 export default function Layout({ children }) {
   return (
@@ -12,7 +13,8 @@ export default function Layout({ children }) {
     direction='column'
     minH='100vh'>
       <Navbar />
-      <Carrito />
+      <TablaProducto />
+      {/* <Carrito /> */}
       <Spacer />
       {/*<PerfilDeUsuario />*/}
       {/*<main>{children}</main>*/}
