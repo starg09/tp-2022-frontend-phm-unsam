@@ -1,8 +1,38 @@
 import { Box, Heading, Flex, Spacer, Button } from "@chakra-ui/react"
 import { BsFillTrashFill } from "react-icons/bs"
+import { useState, useEffect } from 'react'
+import { usuariosService } from "../services/usuario.service"
 
-export default function Carrito(){
-    const carro = [
+export default function Carrito(props){
+    const [carro, set_carro] = useState([])
+    const [renderCarro, set_renderCarro] = useState([])
+    /* const datos = {
+        foto: "keen.png",
+        nombre: "José Antonio",
+        apellido: "Gomez",
+        edad: "34",
+        saldo: "$10000"
+    } */
+   /*  const datos = usuariosService.getUsuario(props.userId) */
+    async function arrancar(){
+        const llamado = await usuariosService.getCarrito(props.userId)
+        console.log(llamado)
+        set_carro(llamado)
+        set_renderCarro(carro.map( c => 
+            <tr>
+            <th scope="row">{c.nombre}</th>
+            <td>{c.descripcion}</td>
+            <td>{c.lote}</td>
+            <td>{c.cantidad}</td>
+            <td>{c.precio}</td>
+            <td><button><BsFillTrashFill /></button></td>
+            </tr>
+            ))
+        }
+      
+    
+    useEffect( () => { arrancar() }, [carro])
+    /* const carro = [
         {
             producto: "Acme Rustico",
             descripcion: "Porcelanato rustico marca Acme",
@@ -16,17 +46,8 @@ export default function Carrito(){
             lote: "5435",
             cantidad: "3",
             precio: "$5962.11"
-        }]
-    const renderCarrito = carro.map( c => 
-        <tr>
-        <th scope="row">{c.producto}</th>
-        <td>{c.descripcion}</td>
-        <td>{c.lote}</td>
-        <td>{c.cantidad}</td>
-        <td>{c.precio}</td>
-        <td><button><BsFillTrashFill /></button></td>
-        </tr>
-        )
+        }] */
+    
     return(
         <Box
         w='75%'
@@ -48,7 +69,7 @@ export default function Carrito(){
                     </tr>
                 </thead>
                 <tbody>
-                    {renderCarrito}
+                    {renderCarro}
                 </tbody>
             </table>
             <Flex>

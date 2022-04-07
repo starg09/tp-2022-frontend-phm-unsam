@@ -8,6 +8,7 @@ import { Flex, Spacer } from '@chakra-ui/react'
 import TablaProducto from './tablaProducto'
 import Producto from './producto'
 
+
 export default function Layout({ children }) {
   return (
     <Flex
@@ -16,7 +17,8 @@ export default function Layout({ children }) {
       <Navbar />
       {/* <Carrito /> */}
       {/* <PerfilDeUsuario /> */}
-      <Producto/>
+      {/* <Producto/> */}
+      <Carrito userId={1}/>
       <Spacer />
       {/* <main>{children}</main> */}
       <Footer />

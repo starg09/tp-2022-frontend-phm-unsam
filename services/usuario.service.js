@@ -19,6 +19,10 @@ class UsuariosService {
         const compras = await axios.get(`${baseUrl}usuarios/${id}/compras`)
         return compras.data
     }
+    async getCarrito (id) {
+        const carrito = await axios.get(`${baseUrl}usuarios/carrito/${id}`)
+        return carrito.data
+    }
 }
 
 export const usuariosService = new UsuariosService()
