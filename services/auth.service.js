@@ -28,10 +28,10 @@ export const authService = {
     const user = localStorage.getItem("user");
     return user ? JSON.parse(user).urlAvatar : null;
   },
-  async signin(usuario, contraseña, cb) {
+  async signin(email, contraseña, cb) {
     await axios
       .post(`${baseUrl}/login`, {
-        userName: usuario,
+        email: email,
         password: contraseña,
       })
       .then(function (res) {

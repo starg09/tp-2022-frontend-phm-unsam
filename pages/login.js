@@ -31,7 +31,7 @@ export default function LoginPage() {
     setLoginEnProceso(true);
     const errores = [];
     //console.log(`User: ${user} & Password: ${password}`)
-    if (event.target.username.value === "") {
+    if (event.target.email.value === "") {
       errores.push("No se puede dejar el nombre de usuario en blanco.");
     }
     if (event.target.password.value === "") {
@@ -43,7 +43,7 @@ export default function LoginPage() {
       return;
     }
     try {
-      await authService.signin(event.target.username.value, event.target.password.value, () => {
+      await authService.signin(event.target.email.value, event.target.password.value, () => {
         setRedirectToReferrer(true);
       });
     } catch (err) {
@@ -80,9 +80,9 @@ export default function LoginPage() {
         >
           <Stack spacing={4}>
             <form onSubmit={handleSubmit}>
-              <FormControl id="username">
-                <FormLabel>Usuario (Nombre y Apellido)</FormLabel>
-                <Input type="text" />
+              <FormControl id="email">
+                <FormLabel>Correo Electrónico</FormLabel>
+                <Input type="email" />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Contraseña</FormLabel>
@@ -112,7 +112,7 @@ export default function LoginPage() {
           </Stack>
         </Box>
       {loginErrors.length > 0 &&
-      <Box w="70%">
+      <Box>
         <SlideFade initialScale={0.9} in={loginErrors.length > 0}>
           <Alert status="error" textAlign="start" minW="100%">
             <AlertIcon boxSize={12} />
