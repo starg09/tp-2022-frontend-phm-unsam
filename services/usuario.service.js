@@ -23,6 +23,9 @@ class UsuariosService {
         const carrito = await axios.get(`${baseUrl}/usuarios/carrito/${id}`)
         return carrito.data
     }
+    async vaciarCarrito (id) {
+        const carrito = await axios.delete(`${baseUrl}/usuarios/${id}/carrito/vaciar`)
+    }
 }
 
 export const usuariosService = new UsuariosService()

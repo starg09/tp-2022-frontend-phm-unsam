@@ -16,6 +16,7 @@ export default function Layout({ children }) {
     minH='100vh'>
       <Navbar />
       <main>{children}</main>
+      <Spacer/>
       <Footer />
     </Flex>
   )

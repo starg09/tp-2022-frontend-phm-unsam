@@ -2,10 +2,11 @@ import { Box, Heading, Flex, Spacer, Button } from "@chakra-ui/react"
 import { BsFillTrashFill } from "react-icons/bs"
 import { useState, useEffect } from 'react'
 import { usuariosService } from "../services/usuario.service"
+import { useRouter } from "next/router"
 
 export default function Carrito(props){
     const [carro, set_carro] = useState([])
-    const [renderCarro, set_renderCarro] = useState([])
+    const router = useRouter()
     /* const datos = {
         foto: "keen.png",
         nombre: "José Antonio",
@@ -18,20 +19,18 @@ export default function Carrito(props){
         const llamado = await usuariosService.getCarrito(props.userId)
         console.log(llamado)
         set_carro(llamado)
-        set_renderCarro(carro.map( c => 
-            <tr>
-            <th scope="row">{c.nombre}</th>
-            <td>{c.descripcion}</td>
-            <td>{c.lote}</td>
-            <td>{c.cantidad}</td>
-            <td>{c.precio}</td>
-            <td><button><BsFillTrashFill /></button></td>
-            </tr>
-            ))
         }
-      
+
+        
+    async function vaciar(){
+        let confirmacion = confirm("Esta seguro de eliminar el carrito?")
+        if ( confirmacion == true) {
+            await usuariosService.vaciarCarrito(props.userId)
+            router.reload()
+            }
+        }
     
-    useEffect( () => { arrancar() }, [carro])
+    useEffect( () => { arrancar() }, [])
     /* const carro = [
         {
             producto: "Acme Rustico",
@@ -53,7 +52,6 @@ export default function Carrito(props){
         w='75%'
         mx='auto'
         my='2em'
-
         >
             <Heading my='1em'>
                 Carrito De Compras
@@ -69,13 +67,22 @@ export default function Carrito(props){
                     </tr>
                 </thead>
                 <tbody>
-                    {renderCarro}
+                    {carro?.map( c => 
+                        <tr>
+                        <th scope="row">{c.nombre}</th>
+                        <td>{c.descripcion}</td>
+                        <td>{c.lote}</td>
+                        <td>{c.cantidad}</td>
+                        <td>{c.precio}</td>
+                        <td><button><BsFillTrashFill /></button></td>
+                        </tr>
+                        )}
                 </tbody>
             </table>
             <Flex>
                 <Spacer />
                 <Box p='4' >
-                    <Button colorScheme="teal" >Limpiar el carrito</Button>
+                    <Button colorScheme="teal" onClick={() => vaciar()}>Limpiar el carrito</Button>
                 </Box>
                 <Box p='4' >
                     <Button colorScheme='teal'>Comprar</Button>
