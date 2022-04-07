@@ -1,8 +1,13 @@
 import { Heading } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { usuariosService } from '../services/usuario.service'
 
-export default function ComprasRealizadas() {
+export default function ComprasRealizadas(props) {
     //traer las compras en una lista
-    const compras = [
+    const [compras, set_compras] = useState([])
+    const [renderCompras, set_renderCompras] = useState([])
+    let [loaded, set_loaded] = useState(false)
+    /* const compras = [
         {
             orden: "#1",
             fecha: "01/02/2022",
@@ -15,17 +20,39 @@ export default function ComprasRealizadas() {
             cantidad: "1",
             importe: "$5962.11"
         }
-    ]
-    const renderCompras = compras.map( c => 
+    ] */
+
+    async function arrancar(){
+        const llamado = await usuariosService.comprasUsuario(props.userId)
+        set_compras([...llamado])
+        const renderComprasComponent = compras.map( c => 
+            <tr>
+            <th scope="row">{c.ordenCompra}</th>
+            <td>{c.fechaCompra}</td>
+            <td>{c.cantidad}</td>
+            <td>{c.importe}</td>
+            </tr>
+            )
+        set_renderCompras([...renderComprasComponent])
+    }
+    
+    useEffect( async() => { 
+        if(!loaded){
+            await arrancar()
+            set_loaded(true)
+            } 
+        })
+    
+    /* const renderCompras = compras.map( c => 
         <tr>
         <th scope="row">{c.orden}</th>
         <td>{c.fecha}</td>
         <td>{c.cantidad}</td>
         <td>{c.importe}</td>
         </tr>
-        )
+        ) */
     return (
-        <div class="w-75">
+        <div class="w-75"> 
             <Heading size={"md"}>Compras</Heading>
             <table class="table table-striped">
                 <thead>

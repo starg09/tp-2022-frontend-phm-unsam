@@ -28,7 +28,7 @@ export default function Home() {
   const todosOrigenes = checkedItems.every(Boolean);
   const algunosOrigenes = checkedItems.some(Boolean) && !todosOrigenes;
 
-  const itemsTemp = [
+/*   const itemsTemp = [
     {
       id: 1,
       nombre: "Acme rústico",
@@ -75,7 +75,7 @@ export default function Home() {
       descripcion:
         "Porcelanato rústico oscuro marca Acme semi satinado 36 x 36",
     },
-  ];
+  ]; */
 
   async function arrancar(){
     const llamado = await productosService.getProductos()

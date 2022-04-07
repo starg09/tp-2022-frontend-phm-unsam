@@ -7,8 +7,8 @@ export default function PerfilDeUsuario(){
     return(
         <div class="container">
             <VStack>
-                <Perfil />
-                <ComprasRealizadas />
+                <Perfil userId={1}/>
+                <ComprasRealizadas userId={1}/>
             </VStack>
         </div>
     )
