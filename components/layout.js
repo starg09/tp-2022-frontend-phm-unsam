@@ -15,12 +15,7 @@ export default function Layout({ children }) {
     direction='column'
     minH='100vh'>
       <Navbar />
-      {/* <Carrito /> */}
-      {/* <PerfilDeUsuario /> */}
-      {/* <Producto/> */}
-      <Carrito userId={1}/>
-      <Spacer />
-      {/* <main>{children}</main> */}
+      <main>{children}</main>
       <Footer />
     </Flex>
   )
