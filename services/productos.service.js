@@ -12,11 +12,11 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`; //HTTPS NO FUNCIONA, USAR HTTP
 
 class ProductosService {
     async getProductos () {
-        const productos = await axios.get(`${baseUrl}productos`)
+        const productos = await axios.get(`${baseUrl}/productos`)
         return productos.data
     }
     async productoDetalles (id) {
-        const producto = await axios.get(`${baseUrl}productos/${id}/detalles`)
+        const producto = await axios.get(`${baseUrl}/productos/${id}/detalles`)
         return producto.data
     }
 }

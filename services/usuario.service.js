@@ -12,15 +12,15 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}`; //HTTPS NO FUNCIONA, USAR HTTP
 
 class UsuariosService {
     async getUsuario (id) {
-        const usuario = await axios.get(`${baseUrl}usuarios/${id}`)
+        const usuario = await axios.get(`${baseUrl}/usuarios/${id}`)
         return usuario.data
     }
     async comprasUsuario (id) {
-        const compras = await axios.get(`${baseUrl}usuarios/${id}/compras`)
+        const compras = await axios.get(`${baseUrl}/usuarios/${id}/compras`)
         return compras.data
     }
     async getCarrito (id) {
-        const carrito = await axios.get(`${baseUrl}usuarios/carrito/${id}`)
+        const carrito = await axios.get(`${baseUrl}/usuarios/carrito/${id}`)
         return carrito.data
     }
 }
