@@ -22,7 +22,7 @@ export default function Perfil(props){
         }
       
     
-    useEffect( () => { arrancar() }, [])
+    useEffect( () => { arrancar() }, {datos})
 
     return (
         <Grid
@@ -33,6 +33,7 @@ export default function Perfil(props){
         templateRows='repeat(2, 1fr)'
         templateColumns='repeat(5, 1fr)'
         gap={4}
+        boxShadow='lg'
         >
             <GridItem rowSpan={2} colSpan={1} bg='tomato' m='2'> <img src="keen.png"/> </GridItem>
             <GridItem colSpan={2}> 
