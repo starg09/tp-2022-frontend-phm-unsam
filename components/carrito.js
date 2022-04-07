@@ -29,6 +29,13 @@ export default function Carrito(props){
             router.reload()
             }
         }
+    async function quitar(idProd){
+        let confirmacion = confirm("Esta seguro de eliminar el elemento del carrito?")
+        if ( confirmacion == true) {
+            await usuariosService.vaciarCarrito(idProd, props.userId)
+            router.reload()
+            }
+        }
     
     useEffect( () => { arrancar() }, [])
     /* const carro = [
@@ -74,7 +81,7 @@ export default function Carrito(props){
                         <td>{c.lote}</td>
                         <td>{c.cantidad}</td>
                         <td>{c.precio}</td>
-                        <td><button><BsFillTrashFill /></button></td>
+                        <td><Button onClick={() => quitar(c.id)}><BsFillTrashFill /></Button></td>
                         </tr>
                         )}
                 </tbody>

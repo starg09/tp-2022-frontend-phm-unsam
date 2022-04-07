@@ -26,6 +26,9 @@ class UsuariosService {
     async vaciarCarrito (id) {
         const carrito = await axios.delete(`${baseUrl}/usuarios/${id}/carrito/vaciar`)
     }
+    async quitarDelCarrito(idProd, idUser){
+        const carrito = await axios.delete(`${baseUrl}/usuarios/carrito/eliminar`, {idUsuario:idUser, idProducto:idProd})
+    }
 }
 
 export const usuariosService = new UsuariosService()
