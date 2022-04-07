@@ -68,13 +68,13 @@ export default function Carrito(props){
                 </thead>
                 <tbody>
                     {carro?.map( c => 
-                        <tr>
-                        <th scope="row">{c.nombre}</th>
-                        <td>{c.descripcion}</td>
-                        <td>{c.lote}</td>
-                        <td>{c.cantidad}</td>
-                        <td>{c.precio}</td>
-                        <td><button><BsFillTrashFill /></button></td>
+                        <tr key={c.id}>
+                            <th scope="row">{c.nombre}</th>
+                            <td>{c.descripcion}</td>
+                            <td>{c.lote}</td>
+                            <td>{c.cantidad}</td>
+                            <td>{c.precio}</td>
+                            <td><button><BsFillTrashFill /></button></td>
                         </tr>
                         )}
                 </tbody>
