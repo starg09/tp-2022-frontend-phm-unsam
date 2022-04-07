@@ -47,7 +47,7 @@ export default function Carrito(props){
             cantidad: "3",
             precio: "$5962.11"
         }] */
-    
+
     return(
         <Box
         w='75%'
@@ -57,8 +57,8 @@ export default function Carrito(props){
         >
             <Heading my='1em'>
                 Carrito De Compras
-            </Heading>            
-            <table class="table table-striped">
+            </Heading>
+            <table className="table table-striped">
                 <thead>
                     <tr>
                     <th scope="col">Producto</th>

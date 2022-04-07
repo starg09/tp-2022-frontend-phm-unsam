@@ -5,7 +5,7 @@ import Perfil from "../components/perfil";
 
 export default function PerfilDeUsuario(){
     return(
-        <div class="container">
+        <div className="container">
             <VStack>
                 <Perfil userId={1}/>
                 <ComprasRealizadas userId={1}/>

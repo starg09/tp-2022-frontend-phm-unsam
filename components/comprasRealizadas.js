@@ -52,9 +52,9 @@ export default function ComprasRealizadas(props) {
         </tr>
         ) */
     return (
-        <div class="w-75"> 
+        <div className="w-75"> 
             <Heading size={"md"}>Compras</Heading>
-            <table class="table table-striped">
+            <table className="table table-striped">
                 <thead>
                     <tr>
                     <th scope="col">Orden de compra</th>

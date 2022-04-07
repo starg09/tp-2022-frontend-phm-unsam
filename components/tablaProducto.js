@@ -31,9 +31,9 @@ export default function TablaProducto(){
         </tr>
         )
     return (
-        <div class="w-75 m-auto">
+        <div className="w-75 m-auto">
             <Heading size={"md"}>Compras</Heading>
-            <table class="table table-striped">
+            <table className="table table-striped">
                 <thead>
                     <tr>
                     <th scope="col">lote</th>

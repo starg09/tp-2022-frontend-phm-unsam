@@ -66,7 +66,7 @@ export default function Producto(props){
             <GridItem rowSpan={2} colSpan={2} bg='papayawhip'>
                 <Box my='1em'>
                     <Container>
-                    <table class="table table-striped">
+                    <table className="table table-striped">
                         <thead>
                             <tr>
                             <th scope="col">lote</th>
