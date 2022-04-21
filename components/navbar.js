@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,8 +17,14 @@ import {
   Stack,
   Heading,
   Text,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  DrawerHeader,
+  DrawerBody,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import Carrito from "./carrito";
 
 class ItemNavbar {
   label = "";
@@ -58,42 +64,71 @@ const NavLink = ({ children, item, ...rest }) => (
 );
 
 export default function NavBar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isMenuOpen,
+    onOpen: onMenuOpen,
+    onClose: onMenuClose,
+  } = useDisclosure();
+  const {
+    isOpen: isCartOpen,
+    onOpen: onCartOpen,
+    onClose: onCartClose,
+  } = useDisclosure();
   const [links, setLinks] = useState([]);
+  const firstField = useRef()
 
   useEffect(() => {
     setLinks([
       ItemNavbar.NewWithLink("Home", "/"),
-      ItemNavbar.NewWithAction("Mi Carrito [0]", () => {
-        console.log("buenas");
-      }),
+      ItemNavbar.NewWithAction("Mi Carrito [0]", onCartOpen),
       ItemNavbar.NewWithLink("Iniciar Sesión", "/login"),
     ]);
     console.log(links);
   }, []);
 
   return (
-    <Box bg="green.700" color="gray.200" px={4}>
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <IconButton
-          size={"md"}
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          aria-label={"Open Menu"}
-          display={{ md: "none" }}
-          onClick={isOpen ? onClose : onOpen}
-        />
-        <Heading>Difficult</Heading>
-        <HStack spacing={8} alignItems={"center"}>
-          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-            {links.map((item, id) => (
-              <NavLink key={id} item={item} />
-            ))}
-            {/* <NavLink to="/">Home</NavLink>
+    <>
+      <Box bg="green.700" color="gray.200" px={4}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <IconButton
+            size={"md"}
+            icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isMenuOpen ? onMenuClose : onMenuOpen}
+          />
+          <Heading>Difficult</Heading>
+          <HStack spacing={8} alignItems={"center"}>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              {links.map((item, id) => (
+                <NavLink key={id} item={item} />
+              ))}
+              {/* <NavLink to="/">Home</NavLink>
             <NavLink to="">Mi Carrito [0]</NavLink>
             <NavLink to="/login">Iniciar Sesión</NavLink> */}
+            </HStack>
           </HStack>
-        </HStack>
-      </Flex>
-    </Box>
+        </Flex>
+      </Box>
+      <Drawer
+        isOpen={isCartOpen}
+        placement="right"
+        size="md"
+        initialFocusRef={firstField}
+        onClose={onCartClose}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth='1px'>Carrito De Compras</DrawerHeader>
+          <DrawerBody>
+            <Carrito userId={1} />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }
