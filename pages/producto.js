@@ -4,8 +4,8 @@ import Perfil from "../components/perfil";
 import Producto from "../components/producto";
 
 
-export default function PerfilDeUsuario(){
+export default function PaginaProducto(){
     return(
-        <Producto/>
+        <Producto id={1} />
     )
 }
