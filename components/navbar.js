@@ -22,12 +22,25 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 class ItemNavbar {
   label = "";
-  link = "";
-  constructor(label, link) { this.label = label; this.link = link}
+  link = null;
+  action = null;
+
+  constructor(label, link, action) {
+    this.label = label;
+    this.link = link;
+    this.action = action;
+  }
+
+  static NewWithLink(label, link) {
+    return new ItemNavbar(label, link, null);
+  }
+  static NewWithAction(label, action) {
+    return new ItemNavbar(label, null, action);
+  }
 }
 
-const NavLink = ({ children, to = "/", ...rest }) => (
-  <Link href={to}>
+const NavLink = ({ children, item, ...rest }) => (
+  <Link href={item.link ? item.link : null}>
     <Text
       px={2}
       py={1}
@@ -36,9 +49,10 @@ const NavLink = ({ children, to = "/", ...rest }) => (
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
+      onClick={item.action ? item.action : null}
       {...rest}
     >
-      {children}
+      {item.label}
     </Text>
   </Link>
 );
@@ -49,11 +63,13 @@ export default function NavBar() {
 
   useEffect(() => {
     setLinks([
-      new ItemNavbar("Home", "/"),
-      new ItemNavbar("Mi Carrito [0]", "/carrito"),
-      new ItemNavbar("Iniciar Sesión", "/login"),
+      ItemNavbar.NewWithLink("Home", "/"),
+      ItemNavbar.NewWithAction("Mi Carrito [0]", () => {
+        console.log("buenas");
+      }),
+      ItemNavbar.NewWithLink("Iniciar Sesión", "/login"),
     ]);
-    console.log(links)
+    console.log(links);
   }, []);
 
   return (
@@ -70,11 +86,11 @@ export default function NavBar() {
         <HStack spacing={8} alignItems={"center"}>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {links.map((item, id) => (
-              <NavLink key={id} to={item.link}>
-                {console.log(item.label)}
-                {item.label}
-              </NavLink>
+              <NavLink key={id} item={item} />
             ))}
+            {/* <NavLink to="/">Home</NavLink>
+            <NavLink to="">Mi Carrito [0]</NavLink>
+            <NavLink to="/login">Iniciar Sesión</NavLink> */}
           </HStack>
         </HStack>
       </Flex>

@@ -14,16 +14,14 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { authService } from "../services";
 
 export default function LoginPage() {
-  const [redirectToReferrer, setRedirectToReferrer] = useState(
-    authService.isAuthenticated()
-  );
-  const [loginErrors, setLoginErrors] = useState([])
-  const [loginEnProceso, setLoginEnProceso] = useState(false)
+  const [redirectToReferrer, setRedirectToReferrer] = useState(authService.isAuthenticated());
+  const [loginErrors, setLoginErrors] = useState([]);
+  const [loginEnProceso, setLoginEnProceso] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (event) => {
@@ -43,9 +41,13 @@ export default function LoginPage() {
       return;
     }
     try {
-      await authService.signin(event.target.email.value, event.target.password.value, () => {
-        setRedirectToReferrer(true);
-      });
+      await authService.signin(
+        event.target.email.value,
+        event.target.password.value,
+        () => {
+          setRedirectToReferrer(true);
+        }
+      );
     } catch (err) {
       console.log(err.response);
       setLoginErrors([
@@ -58,77 +60,84 @@ export default function LoginPage() {
   };
 
   if (redirectToReferrer === true) {
-    router.push('/');
-  }
+    router.push("/");
+    return(null);
+  } else {
 
-  return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Iniciar Sesión</Heading>
-        </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
-          <Stack spacing={4}>
-            <form onSubmit={handleSubmit}>
-              <FormControl id="email">
-                <FormLabel>Correo Electrónico</FormLabel>
-                <Input type="email" />
-              </FormControl>
-              <FormControl id="password">
-                <FormLabel>Contraseña</FormLabel>
-                <Input type="password" />
-              </FormControl>
-              <Stack spacing={10}>
-                {/* <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Link color={"blue.400"}>Forgot password?</Link>
-              </Stack> */}
-                <Button
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                  type="submit"
-                >
-                  Sign in
-                </Button>
-              </Stack>
-            </form>
+    return (
+      <Flex
+        align={"center"}
+        justify={"center"}
+        bg={useColorModeValue("gray.50", "gray.800")}
+      >
+        <Stack spacing={8} mx={"auto"} w={"xl"} py={12} px={6}>
+          <Stack align={"center"}>
+            <Heading fontSize={"4xl"}>Iniciar Sesión</Heading>
           </Stack>
-        </Box>
-      {loginErrors.length > 0 &&
-      <Box>
-        <SlideFade initialScale={0.9} in={loginErrors.length > 0}>
-          <Alert status="error" textAlign="start" minW="100%">
-            <AlertIcon boxSize={12} />
-            <Box flex="1" pl={2}>
-              <AlertTitle pb={1}>Error al Autenticar</AlertTitle>
-              <ul>{loginErrors.map((err,i) =>
-                <AlertDescription key={"alert-error-" + i} display="block" fontSize="md" pl={4}>
-                  <li>{err}</li>
-                </AlertDescription>
-              )}</ul>
-            </Box>
-          </Alert>
-        </SlideFade>
-      </Box>
-      }
-      </Stack>
-    </Flex>
-  );
+          <Box
+            rounded={"lg"}
+            bg={useColorModeValue("white", "gray.700")}
+            boxShadow={"lg"}
+            p={8}
+          >
+            <Stack spacing={4}>
+              <form onSubmit={handleSubmit}>
+                <FormControl id="email">
+                  <FormLabel>Correo Electrónico</FormLabel>
+                  <Input type="email" />
+                </FormControl>
+                <FormControl id="password">
+                  <FormLabel>Contraseña</FormLabel>
+                  <Input type="password" />
+                </FormControl>
+                <Stack spacing={10}>
+                  {/* <Stack
+                  direction={{ base: "column", sm: "row" }}
+                  align={"start"}
+                  justify={"space-between"}
+                >
+                  <Checkbox>Remember me</Checkbox>
+                  <Link color={"blue.400"}>Forgot password?</Link>
+                </Stack> */}
+                  <Button
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                    type="submit"
+                    isLoading={loginEnProceso}
+                  >
+                    Sign in
+                  </Button>
+                </Stack>
+              </form>
+            </Stack>
+          </Box>
+          {loginErrors.length > 0 && (
+              <SlideFade initialScale={0.9} in={loginErrors.length > 0}>
+                <Alert status="error" textAlign="start" minW="100%">
+                  <AlertIcon boxSize={12} />
+                  <Box flex="1" pl={2}>
+                    <AlertTitle pb={1}>Error al Autenticar</AlertTitle>
+                    <ul>
+                      {loginErrors.map((err, i) => (
+                        <AlertDescription
+                          key={"alert-error-" + i}
+                          display="block"
+                          fontSize="md"
+                          pl={4}
+                        >
+                          <li>{err}</li>
+                        </AlertDescription>
+                      ))}
+                    </ul>
+                  </Box>
+                </Alert>
+              </SlideFade>
+          )}
+        </Stack>
+      </Flex>
+    );
+  }
 }
