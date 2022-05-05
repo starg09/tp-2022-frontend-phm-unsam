@@ -22,82 +22,54 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 
 export default function Home() {
+  const [busqueda, setBusqueda] = useState("");
+
   const [puntaje, setPuntaje] = useState("0");
-
-  //TODO: Generar este estado en base a mock data (y luego al backend).
-  const [checkedItems, setCheckedItems] = useState([false, false]);
+  const [checkedPaises, setCheckedPaises] = useState([]);
   const [itemsReal, set_itemsReal] = useState([])
-  const todosOrigenes = checkedItems.every(Boolean);
-  const algunosOrigenes = checkedItems.some(Boolean) && !todosOrigenes;
+  const todosOrigenes = checkedPaises.every(Boolean);
+  const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
 
-/*   const itemsTemp = [
-    {
-      id: 1,
-      nombre: "Acme rústico",
-      imagen: "",
-      puntaje: 2,
-      precio: 2536.55,
-      origen: "Argentina",
-      descripcion: "Porcelanato rústico marca Acme semi satinado 36 x 36",
-    },
-    {
-      id: 2,
-      nombre: "Acme arena",
-      imagen: "",
-      puntaje: 3,
-      precio: 1987.37,
-      origen: "Argentina",
-      descripcion: "Porcelanato arena marca Acme semi satinado 36 x 36",
-    },
-    {
-      id: 3,
-      nombre: "Acme beteado",
-      imagen: "",
-      puntaje: 1,
-      precio: 2996.99,
-      origen: "Argentina",
-      descripcion: "Porcelanato beteado marca Acme satinado 36 x 36",
-    },
-    {
-      id: 4,
-      nombre: "Adla blanco",
-      imagen: "",
-      puntaje: 4,
-      precio: 8836.77,
-      origen: "Argentina",
-      descripcion: "Pintura para interiores color rojo marca Adla x 20 litros",
-    },
-    {
-      id: 5,
-      nombre: "Acme rústico dark",
-      imagen: "",
-      puntaje: 4,
-      precio: 2536.55,
-      origen: "Argentina",
-      descripcion:
-        "Porcelanato rústico oscuro marca Acme semi satinado 36 x 36",
-    },
-  ]; */
+  //TODO: Obtener paises desde el back, incluirlos en la base de datos.
+  const listaFiltroPaises = ["Argentina", "Brasil"]
 
-  async function arrancar(){
-    const llamado = await productosService.getProductos()
+
+  async function buscarProductos(){
+    const llamado = await productosService.filtrarProductos(busqueda, todosOrigenes? [] : listaFiltroPaises.filter((_, n) => checkedPaises[n]), puntaje)
     console.log(llamado)
     set_itemsReal([...llamado])
-    }
-  
+  }
 
-  useEffect( () => { arrancar() }, [] )
+  function arrancar() {
+    const tempChecklist = listaFiltroPaises.map(it => false)
+    setCheckedPaises(tempChecklist)
+    buscarProductos()
+  }
+
+
+    useEffect( () => { arrancar() }, [] )
+    useEffect( () => { buscarProductos() }, [puntaje, checkedPaises] )
+    // useEffect( () => console.log(puntaje), [puntaje])
 
   return (
     <VStack minH="80vh" bg="orange.200">
       <InputGroup w="60%" my={3} size="md" bg="yellow.100" borderRadius="1.5vw">
         <Input
+          borderRadius="1.5vw"
           pr="4.5rem"
           type="text"
-          placeholder="Buscar" borderRadius="1.5vw"
+          placeholder="Buscar"
+          value={busqueda}
+          onInput={e => setBusqueda(e.target.value)}
         />
         <InputRightElement width="4.5rem">
-          <Button h="1.75rem" size="sm" colorScheme="blue" borderRadius="1.5vw">
+          <Button
+            h="1.75rem"
+            size="sm"
+            colorScheme="blue"
+            borderRadius="1.5vw"
+            onClick={buscarProductos}
+          >
             <SearchIcon/>
           </Button>
         </InputRightElement>
@@ -120,19 +92,19 @@ export default function Home() {
             >
               <VStack alignItems="flex-start">
                 <Heading size="md" alignSelf="center">
-                  Puntaje
+                  Puntaje Mínimo
                 </Heading>
                 <Radio size="md" value="5">
-                  5 puntos
+                  5 Estrellas
                 </Radio>
                 <Radio size="md" value="4">
-                  4 o más puntos
+                  Desde 4 Estrellas
                 </Radio>
                 <Radio size="md" value="3">
-                  3 o más puntos
+                  Desde 3 Estrellas
                 </Radio>
                 <Radio size="md" value="2">
-                  2 o más puntos
+                  Desde 2 Estrellas
                 </Radio>
                 <Radio size="md" value="0">
                   Todos
@@ -147,32 +119,33 @@ export default function Home() {
               colorScheme="purple"
               isChecked={todosOrigenes}
               isIndeterminate={algunosOrigenes}
-              onChange={(e) =>
-                setCheckedItems([e.target.checked, e.target.checked])
-              }
+              onChange={e => setCheckedPaises(listaFiltroPaises.map(it => e.target.checked))}
             >
               Todos
             </Checkbox>
             <VStack alignItems="flex-start" pl={6} mt={1} spacing={1}>
-              <Checkbox
-                colorScheme="purple"
-                isChecked={checkedItems[0]}
-                onChange={(e) =>
-                  setCheckedItems([e.target.checked, checkedItems[1]])
-                }
-              >
-                Argentina
-              </Checkbox>
-              <Checkbox
-                colorScheme="purple"
-                isChecked={checkedItems[1]}
-                onChange={(e) =>
-                  setCheckedItems([checkedItems[0], e.target.checked])
-                }
-              >
-                Brasil
-              </Checkbox>
+              {listaFiltroPaises.map( (item, n) =>
+
+                (
+                  <Checkbox
+                    key={"paises-".concat(n)}
+                    colorScheme="purple"
+                    isChecked={checkedPaises[n]}
+                    onChange={(e) => {
+                      const tempChecklist = checkedPaises.map(it => it)
+                      tempChecklist[n] = e.target.checked
+                      setCheckedPaises(tempChecklist)
+                    }
+                    }
+                  >
+                    {item}
+                  </Checkbox>
+                )
+              )}
             </VStack>
+            {/* <Button alignSelf="center" colorScheme="purple" onClick={e => console.log(checkedPaises)}>
+              Debug: Check state
+            </Button> */}
           </VStack>
         </Box>
         <SimpleGrid columns={4} w="80%" maxH="100%" overflowY="auto" p={3}>
@@ -185,7 +158,7 @@ export default function Home() {
               borderRadius="2vh"
               bg="green.400"
             >
-              {console.log(i)}
+              {/* {console.log(i)} */}
               <VStack my={5} alignItems="flex-start">
                 <Image
                   alignSelf="center"
@@ -216,6 +189,9 @@ export default function Home() {
                 <Text px={4} fontSize="sm" fontStyle="italic">
                   {i.descripcionDto}
                 </Text>
+                <Button alignSelf="center" colorScheme="orange">
+                  Detalle
+                </Button>
                 <Button alignSelf="center" colorScheme="purple">
                   Agregar al carrito
                 </Button>

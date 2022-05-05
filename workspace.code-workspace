@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "Monokai",
+		"liveServer.settings.multiRootWorkspaceName": "runapp-grupo8",
+		"java.home": "C:\\Program Files\\AdoptOpenJDK\\jdk-11.0.9.11-hotspot\\",
+		"maven.terminal.useJavaHome": true,
+		"todo-tree.tree.disableCompactFolders": false
+	}
+}

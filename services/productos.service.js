@@ -15,6 +15,12 @@ class ProductosService {
         const productos = await axios.get(`${baseUrl}/productos`)
         return productos.data
     }
+
+    async filtrarProductos(nombre, paises, puntajeMinimo) {
+        const productos = await axios.get(`${baseUrl}/productos/filtrar?nombre=${nombre}&paises=${paises.join(",")}&puntajeMinimo=${puntajeMinimo}`)
+        return productos.data
+    }
+
     async productoDetalles (id) {
         const producto = await axios.get(`${baseUrl}/productos/${id}/detalles`)
         return producto.data
