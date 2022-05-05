@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import Carrito from "./carrito";
+import { authService } from "../services";
 
 class ItemNavbar {
   label = "";
@@ -77,12 +78,22 @@ export default function NavBar() {
   const [links, setLinks] = useState([]);
   const firstField = useRef()
 
+  const [tamanioCarrito, setTamanioCarrito] = useState(0)
+
+  const linksNavbar = []
+  linksNavbar.push(ItemNavbar.NewWithLink("Home", "/"))
+  if (authService.isAuthenticated()) {
+    //TODO Menu de chakra
+    linksNavbar.push(ItemNavbar.NewWithAction(`Mi Carrito [${tamanioCarrito}]`, onCartOpen))
+    linksNavbar.push(ItemNavbar.NewWithLink("Mi Perfil", "/perfilDeUsuario"))
+    linksNavbar.push(ItemNavbar.NewWithAction("Logout >", authService.signout))
+  } else {
+    linksNavbar.push(ItemNavbar.NewWithLink("Iniciar Sesión", "/login"))
+  }
+
+
   useEffect(() => {
-    setLinks([
-      ItemNavbar.NewWithLink("Home", "/"),
-      ItemNavbar.NewWithAction("Mi Carrito [0]", onCartOpen),
-      ItemNavbar.NewWithLink("Iniciar Sesión", "/login"),
-    ]);
+    setLinks(linksNavbar);
     console.log(links);
   }, []);
 
