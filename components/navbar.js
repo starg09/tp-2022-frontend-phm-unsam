@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,17 +17,36 @@ import {
   Stack,
   Heading,
   Text,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  DrawerHeader,
+  DrawerBody,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import Carrito from "./carrito";
 
 class ItemNavbar {
   label = "";
-  link = "";
-  constructor(label, link) { this.label = label; this.link = link}
+  link = null;
+  action = null;
+
+  constructor(label, link, action) {
+    this.label = label;
+    this.link = link;
+    this.action = action;
+  }
+
+  static NewWithLink(label, link) {
+    return new ItemNavbar(label, link, null);
+  }
+  static NewWithAction(label, action) {
+    return new ItemNavbar(label, null, action);
+  }
 }
 
-const NavLink = ({ children, to = "/", ...rest }) => (
-  <Link href={to}>
+const NavLink = ({ children, item, ...rest }) => (
+  <Link href={item.link ? item.link : null}>
     <Text
       px={2}
       py={1}
@@ -36,48 +55,80 @@ const NavLink = ({ children, to = "/", ...rest }) => (
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
+      onClick={item.action ? item.action : null}
       {...rest}
     >
-      {children}
+      {item.label}
     </Text>
   </Link>
 );
 
 export default function NavBar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isMenuOpen,
+    onOpen: onMenuOpen,
+    onClose: onMenuClose,
+  } = useDisclosure();
+  const {
+    isOpen: isCartOpen,
+    onOpen: onCartOpen,
+    onClose: onCartClose,
+  } = useDisclosure();
   const [links, setLinks] = useState([]);
+  const firstField = useRef()
 
   useEffect(() => {
     setLinks([
-      new ItemNavbar("Home", "/"),
-      new ItemNavbar("Mi Carrito [0]", "/carrito"),
-      new ItemNavbar("Iniciar Sesión", "/login"),
+      ItemNavbar.NewWithLink("Home", "/"),
+      ItemNavbar.NewWithAction("Mi Carrito [0]", onCartOpen),
+      ItemNavbar.NewWithLink("Iniciar Sesión", "/login"),
     ]);
-    console.log(links)
+    console.log(links);
   }, []);
 
   return (
-    <Box bg="green.700" color="gray.200" px={4}>
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <IconButton
-          size={"md"}
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          aria-label={"Open Menu"}
-          display={{ md: "none" }}
-          onClick={isOpen ? onClose : onOpen}
-        />
-        <Heading>Difficult</Heading>
-        <HStack spacing={8} alignItems={"center"}>
-          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-            {links.map((item, id) => (
-              <NavLink key={id} to={item.link}>
-                {console.log(item.label)}
-                {item.label}
-              </NavLink>
-            ))}
+    <>
+      <Box bg="green.700" color="gray.200" px={4}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <IconButton
+            size={"md"}
+            icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isMenuOpen ? onMenuClose : onMenuOpen}
+          />
+          <Heading>Difficult</Heading>
+          <HStack spacing={8} alignItems={"center"}>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              {links.map((item, id) => (
+                <NavLink key={id} item={item} />
+              ))}
+              {/* <NavLink to="/">Home</NavLink>
+            <NavLink to="">Mi Carrito [0]</NavLink>
+            <NavLink to="/login">Iniciar Sesión</NavLink> */}
+            </HStack>
           </HStack>
-        </HStack>
-      </Flex>
-    </Box>
+        </Flex>
+      </Box>
+      <Drawer
+        isOpen={isCartOpen}
+        placement="right"
+        size="md"
+        initialFocusRef={firstField}
+        onClose={onCartClose}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth='1px'>Carrito De Compras</DrawerHeader>
+          <DrawerBody>
+            <Carrito userId={1} />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }

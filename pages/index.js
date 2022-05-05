@@ -18,6 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { productosService } from "../services/productos.service";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+
 
 export default function Home() {
   const [puntaje, setPuntaje] = useState("0");
@@ -174,30 +176,36 @@ export default function Home() {
           </VStack>
         </Box>
         <SimpleGrid columns={4} w="80%" maxH="100%" overflowY="auto" p={3}>
-          {itemsReal.map((i) => (
+          {itemsReal.map((i, id) => (
             <Box
               minH="40vh"
               size="full"
               m={5}
+              id={id}
               borderRadius="2vh"
               bg="green.400"
             >
+              {console.log(i)}
               <VStack my={5} alignItems="flex-start">
                 <Image
                   alignSelf="center"
                   w="60%"
                   h="auto"
-                  src={i.imagen ? i.imagen : "img_placeholder.png"}
-                />
+                  src={i.urlImagenDto ? i.urlImagenDto : ""}
+                  fallbackSrc="img_placeholder.png"
+                  />
                 <Divider py={1} />
                 <HStack
                   px={4}
-                  fontSize="sm"
+                  my={3}
                   w="full"
                   justifyContent="space-between"
                 >
-                  <Text>{i.nombreDto}</Text>
-                  <Text>{i.puntajeDto}*</Text> {/* TODO: Usar estrellas */}
+                  <Text fontSize="sm">{i.nombreDto}</Text>
+                  <HStack maxW="50%" minH="2em">
+                    {[...Array(i.puntajeDto)].map((e, i) => <AiFillStar/>)}
+                    {[...Array(5 - i.puntajeDto)].map((e, i) => <AiOutlineStar/>)}
+                  </HStack>
                 </HStack>
                 <Heading alignSelf="center" size="lg">
                   ${i.precioDto}

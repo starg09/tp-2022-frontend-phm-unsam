@@ -7,14 +7,17 @@ import Carrito from './carrito'
 import { Flex, Spacer } from '@chakra-ui/react'
 import TablaProducto from './tablaProducto'
 import Producto from './producto'
+import { useRouter } from 'next/router'
 
 
 export default function Layout({ children }) {
+  const router = useRouter()
+  const showNavBar = !(router.pathname === '/login');
   return (
     <Flex
     direction='column'
     minH='100vh'>
-      <Navbar />
+      {showNavBar && <Navbar />}
       <main>{children}</main>
       <Spacer/>
       <Footer />
