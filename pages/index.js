@@ -12,6 +12,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Link,
   Radio,
   RadioGroup,
   SimpleGrid,
@@ -23,9 +24,13 @@ import { productosService } from "../services/productos.service";
 import { usuariosService } from "../services/usuario.service";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { MdOutlineReportGmailerrorred } from "react-icons/md"
+import { authService } from "../services";
+import { useRouter } from "next/router";
 
 
 export default function Home() {
+  const router = useRouter();
+
   const [itemsReal, set_itemsReal] = useState([])
 
   const [busqueda, setBusqueda] = useState("");
@@ -45,6 +50,72 @@ export default function Home() {
     const llamado = await productosService.filtrarProductos(busqueda, todosOrigenes? [] : listaFiltroPaises.filter((_, n) => checkedPaises[n]), puntaje)
     console.log(llamado)
     set_itemsReal([...llamado])
+    }
+  /* 
+  class AgregarCarritoDTO(
+    var idProducto: Int, 
+    var idUsuario: Int, 
+    var cantidad: Int, 
+    var loteNumero: Int)  
+
+    abstract class ProductoDTO {
+    var nombreDto: String = ""
+    var descripcionDto: String= ""
+    var puntajeDto: Int = 0
+    var paisOrigenDto: String = ""
+    var precioDto: Double = 0.0
+    var lotesDto = listOf<LoteDTO>()
+    var idDto: Int = 0
+}
+    */
+  async function agregarAlCarrito(idProducto, listaLotes = []){
+    if (!authService.isAuthenticated()) {
+      toast({
+        title: (<Text><Link color="yellow" textDecoration="underline" onClick={() => {
+          toast.closeAll()
+          router.push("/login")
+        }}>Inicie sesión</Link> para usar el carrito.</Text>),
+        description: "Necesita una cuenta para ingresar.",
+        status: 'warning',
+        duration: 20000,
+        isClosable: true,
+      })
+    } else {
+      const errores = []
+      //Buscar lote con cantidad
+      const lote = listaLotes.find( l => l.cantidadDisponibleDto > 0 )
+      if (lote == undefined) errores.push("No hay lotes disponibles para este producto.")
+      if (errores.length == 0) {
+        const idUsuario = authService.getIdUsuario()
+        const agregable = {
+          idProducto: idProducto,
+          idUsuario: idUsuario,
+          cantidad: 1,
+          loteNumero: lote.numeroLoteDto
+        }
+        try {
+          await usuariosService.agregarAlCarrito(agregable)
+          toast({
+            title: 'agregado al carrito',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+        } catch (e) {
+          console.log(e)
+          errores.push(`Error de servidor: ${e}`)
+        }
+      }
+      if (errores.length){
+        toast({
+          title: 'Ocurrió un error.',
+          description: "* ".concat(errores.join("\n* ")),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+    }
   }
 
 
