@@ -86,7 +86,7 @@ export default function Home() {
       const lote = listaLotes.find( l => l.cantidadDisponibleDto > 0 )
       if (lote == undefined) errores.push("No hay lotes disponibles para este producto.")
       if (errores.length == 0) {
-        const idUsuario = authService.getIdUsuario()
+        const idUsuario = localStorage.getItem("user")
         const agregable = {
           idProducto: idProducto,
           idUsuario: idUsuario,
@@ -94,6 +94,7 @@ export default function Home() {
           loteNumero: lote.numeroLoteDto
         }
         try {
+          console.log(agregable)
           await usuariosService.agregarAlCarrito(agregable)
           toast({
             title: 'agregado al carrito',
@@ -102,7 +103,8 @@ export default function Home() {
             isClosable: true,
           })
         } catch (e) {
-          console.log(e)
+          debugger
+          console.log(e.errors)
           errores.push(`Error de servidor: ${e}`)
         }
       }
