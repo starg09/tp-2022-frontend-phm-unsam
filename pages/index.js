@@ -2,6 +2,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Center,
   Checkbox,
   Divider,
   Heading,
@@ -19,19 +20,22 @@ import {
 import { useState, useEffect } from "react";
 import { productosService } from "../services/productos.service";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { MdOutlineReportGmailerrorred } from "react-icons/md"
 
 
 export default function Home() {
-  const [busqueda, setBusqueda] = useState("");
-
-  const [puntaje, setPuntaje] = useState("0");
-  const [checkedPaises, setCheckedPaises] = useState([]);
   const [itemsReal, set_itemsReal] = useState([])
-  const todosOrigenes = checkedPaises.every(Boolean);
-  const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
+
+  const [busqueda, setBusqueda] = useState("");
+  const [puntaje, setPuntaje] = useState("0");
 
   //TODO: Obtener paises desde el back, incluirlos en la base de datos.
   const listaFiltroPaises = ["Argentina", "Brasil"]
+
+  const [checkedPaises, setCheckedPaises] = useState(listaFiltroPaises.map(it => false));
+  const todosOrigenes = checkedPaises.every(Boolean);
+  const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
+
 
 
   async function buscarProductos(){
@@ -40,14 +44,8 @@ export default function Home() {
     set_itemsReal([...llamado])
   }
 
-  function arrancar() {
-    const tempChecklist = listaFiltroPaises.map(it => false)
-    setCheckedPaises(tempChecklist)
-    buscarProductos()
-  }
 
-
-    useEffect( () => { arrancar() }, [] )
+    // useEffect( () => { buscarProductos() }, [] )
     useEffect( () => { buscarProductos() }, [puntaje, checkedPaises] )
     // useEffect( () => console.log(puntaje), [puntaje])
 
@@ -61,6 +59,7 @@ export default function Home() {
           placeholder="Buscar"
           value={busqueda}
           onInput={e => setBusqueda(e.target.value)}
+          onKeyUp={e => {if (e.key == 'Enter') buscarProductos()}}
         />
         <InputRightElement width="4.5rem">
           <Button
@@ -74,8 +73,8 @@ export default function Home() {
           </Button>
         </InputRightElement>
       </InputGroup>
-      <HStack alignItems="stretch">
-        <Box w="20%" p={3}>
+      <HStack minW="90vw" alignItems="stretch">
+        <Box w="22%" p={3}>
           <VStack
             p={4}
             alignContent="flex-start"
@@ -148,8 +147,9 @@ export default function Home() {
             </Button> */}
           </VStack>
         </Box>
-        <SimpleGrid columns={4} w="80%" maxH="100%" overflowY="auto" p={3}>
-          {itemsReal.map((i, id) => (
+        {console.log(itemsReal.length)}
+        <SimpleGrid columns={itemsReal.length ? 4 : 1} w="76%" maxH="100%" overflowY="auto" p={3}>
+          {(itemsReal.length) ? itemsReal.map((i, id) => (
             <Box
               minH="40vh"
               size="full"
@@ -176,8 +176,8 @@ export default function Home() {
                 >
                   <Text fontSize="sm">{i.nombreDto}</Text>
                   <HStack maxW="50%" minH="2em">
-                    {[...Array(i.puntajeDto)].map((e, i) => <AiFillStar/>)}
-                    {[...Array(5 - i.puntajeDto)].map((e, i) => <AiOutlineStar/>)}
+                    {[...Array(i.puntajeDto)].map((e, n) => <AiFillStar id={`star-${id}-${n}`} />)}
+                    {[...Array(5 - i.puntajeDto)].map((e, n) => <AiOutlineStar id={`empty-star-${id}-${n}`} />)}
                   </HStack>
                 </HStack>
                 <Heading alignSelf="center" size="lg">
@@ -197,7 +197,21 @@ export default function Home() {
                 </Button>
               </VStack>
             </Box>
-          ))}
+          )) : (
+            <Center
+              minH="60vh"
+              w="80%"
+              size="full"
+              m={5}
+              borderRadius="2vh"
+              bg="green.400"
+            >
+              <VStack>
+                <MdOutlineReportGmailerrorred fontSize={128}/>
+                <Text fontStyle="italic" fontSize="xx-large">¡No se encontraron resultados!</Text>
+              </VStack>
+            </Center>
+          )}
         </SimpleGrid>
       </HStack>
     </VStack>
