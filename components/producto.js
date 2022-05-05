@@ -30,10 +30,8 @@ export default function Producto(props) {
 
   return (
     <Grid
-      m="2em"
       mx="auto"
-      w="70vw"
-      h="500px"
+      minH="500px"
       templateRows="repeat(5, 1fr)"
       templateColumns="repeat(6, 1fr)"
       border="1px solid papayawhip"
