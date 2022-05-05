@@ -3,6 +3,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
 import { usuariosService } from "../services/usuario.service";
 import { useRouter } from "next/router";
+import { carritoService } from "../services/carrito.service"
 
 export default function Carrito(props) {
   const [carro, set_carro] = useState([]);
@@ -25,6 +26,14 @@ export default function Carrito(props) {
     let confirmacion = confirm("Esta seguro de eliminar el carrito?");
     if (confirmacion == true) {
       await usuariosService.vaciarCarrito(props.userId);
+      arrancar();
+    }
+  }
+
+  async function comprar() {
+    let confirmacion = confirm("Esta seguro de raelizar la compra?");
+    if (confirmacion == true) {
+      await carritoService.comprar(props.userId);
       arrancar();
     }
   }
@@ -85,7 +94,7 @@ export default function Carrito(props) {
           </Button>
         </Box>
         <Box p="4">
-          <Button colorScheme="teal">Comprar</Button>
+          <Button colorScheme="teal" onClick={() => comprar()}>Comprar</Button>
         </Box>
       </Flex>
     </Box>
