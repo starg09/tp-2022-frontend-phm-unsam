@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Checkbox,
+  createStandaloneToast,
   Divider,
   Heading,
   HStack,
@@ -19,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { productosService } from "../services/productos.service";
+import { usuariosService } from "../services/usuario.service";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { MdOutlineReportGmailerrorred } from "react-icons/md"
 
@@ -35,6 +37,7 @@ export default function Home() {
   const [checkedPaises, setCheckedPaises] = useState(listaFiltroPaises.map(it => false));
   const todosOrigenes = checkedPaises.every(Boolean);
   const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
+  const toast = createStandaloneToast()
 
 
 
@@ -192,7 +195,7 @@ export default function Home() {
                 <Button alignSelf="center" colorScheme="orange">
                   Detalle
                 </Button>
-                <Button alignSelf="center" colorScheme="purple">
+                <Button alignSelf="center" colorScheme="purple" onClick={async () => await agregarAlCarrito(i.idDto, i.lotesDto)}>
                   Agregar al carrito
                 </Button>
               </VStack>
