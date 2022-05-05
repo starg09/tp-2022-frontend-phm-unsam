@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  createStandaloneToast,
   Divider,
   Heading,
   HStack,
@@ -18,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { productosService } from "../services/productos.service";
+import { usuariosService } from "../services/usuario.service";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 
@@ -29,6 +31,8 @@ export default function Home() {
   const [itemsReal, set_itemsReal] = useState([])
   const todosOrigenes = checkedItems.every(Boolean);
   const algunosOrigenes = checkedItems.some(Boolean) && !todosOrigenes;
+
+  const toast = createStandaloneToast()
 
 /*   const itemsTemp = [
     {
@@ -84,7 +88,53 @@ export default function Home() {
     console.log(llamado)
     set_itemsReal([...llamado])
     }
-  
+  /* 
+  class AgregarCarritoDTO(
+    var idProducto: Int, 
+    var idUsuario: Int, 
+    var cantidad: Int, 
+    var loteNumero: Int)  
+
+    abstract class ProductoDTO {
+    var nombreDto: String = ""
+    var descripcionDto: String= ""
+    var puntajeDto: Int = 0
+    var paisOrigenDto: String = ""
+    var precioDto: Double = 0.0
+    var lotesDto = listOf<LoteDTO>()
+    var idDto: Int = 0
+}
+    */
+  async function agregarAlCarrito(idProducto, listaLotes = []){
+    //Buscar lote con cantidad
+    debugger
+    const lote = listaLotes.find( l => l.cantidadDisponibleDto > 0 )
+    const idUsuario = localStorage.getItem("user") //FIXME: optimizar manejo de errores
+    if(lote == undefined || idUsuario === null){
+      toast({
+        title: 'An error occurred.',
+        description: 'no hay lote disponible o no esta logueado',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+    else{
+      const agregable = {
+        idProducto: idProducto, 
+        idUsuario: idUsuario, 
+        cantidad: 1, 
+        loteNumero: lote.numeroLoteDto
+      }
+      await usuariosService.agregarAlCarrito(agregable)
+      toast({
+        title: 'agregado al carrito',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+    }
+  }
 
   useEffect( () => { arrancar() }, [] )
 
@@ -216,7 +266,7 @@ export default function Home() {
                 <Text px={4} fontSize="sm" fontStyle="italic">
                   {i.descripcionDto}
                 </Text>
-                <Button alignSelf="center" colorScheme="purple">
+                <Button alignSelf="center" colorScheme="purple" onClick={async () => await agregarAlCarrito(i.idDto, i.lotesDto)}>
                   Agregar al carrito
                 </Button>
               </VStack>
