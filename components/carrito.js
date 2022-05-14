@@ -22,6 +22,14 @@ export default function Carrito(props) {
     set_carro(llamado);
   }
 
+  async function eliminar(item) {
+    let confirmacion = confirm(`Esta seguro de eliminar el item: "${item.nombre}" x${item.cantidad}?`);
+    if (confirmacion == true) {
+      await usuariosService.quitarDelCarrito(item.id, props.userId);
+      arrancar();
+    }
+  }
+
   async function vaciar() {
     let confirmacion = confirm("Esta seguro de eliminar el carrito?");
     if (confirmacion == true) {
@@ -79,7 +87,7 @@ export default function Carrito(props) {
               <td>${c.precio}</td>
               <td>
                 <button>
-                  <BsFillTrashFill />
+                  <BsFillTrashFill onClick={() => eliminar(c)} />
                 </button>
               </td>
             </tr>

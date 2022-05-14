@@ -24,10 +24,10 @@ class UsuariosService {
         return carrito.data
     }
     async vaciarCarrito (id) {
-        const carrito = await axios.delete(`${baseUrl}/usuarios/${id}/carrito/vaciar`)
+        await axios.delete(`${baseUrl}/usuarios/${id}/carrito/vaciar`)
     }
     async quitarDelCarrito(idProd, idUser){
-        const carrito = await axios.delete(`${baseUrl}/usuarios/carrito/eliminar`, {idUsuario:idUser, idProducto:idProd})
+        await axios.delete(`${baseUrl}/usuarios/carrito/eliminar`, {data: {idUsuario:idUser, idProducto:idProd}})
     }
     async agregarAlCarrito(agregableDto, idUser){
         await axios.put(`${baseUrl}/usuarios/${idUser}/carrito/agregar`, agregableDto)
