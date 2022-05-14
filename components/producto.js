@@ -76,9 +76,7 @@ export default function Producto(props) {
       </GridItem>
       <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
         <VStack h="100%">
-          <Heading>
-            {datos.nombreDto}
-          </Heading>
+          <Heading>{datos.nombreDto}</Heading>
         </VStack>
       </GridItem>
       <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
@@ -143,7 +141,9 @@ export default function Producto(props) {
       </GridItem>
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
         <Center h="full">
-          <Text color="gray" fontStyle="italic" fontSize="lg">{datos.descripcionDto}</Text>
+          <Text color="gray" fontStyle="italic" fontSize="lg">
+            {datos.descripcionDto}
+          </Text>
         </Center>
       </GridItem>
       <GridItem rowSpan={2} colSpan={3} bg="papayawhip" px={16}>
@@ -189,7 +189,11 @@ export default function Producto(props) {
       </GridItem>
       <GridItem rowSpan={1} colSpan={1} bg="papayawhip">
         <VStack h="100%" justifyContent="center">
-          <Button colorScheme="teal" w="170px">
+          <Button
+            colorScheme="teal"
+            w="170px"
+            onClick={async () => await props.funcionCarrito(props.id, datos.lotesDto, loteSeleccionado, cantidadSeleccionada)}
+          >
             Agregar al carrito
           </Button>
         </VStack>
