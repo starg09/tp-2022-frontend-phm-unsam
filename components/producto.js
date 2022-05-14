@@ -13,15 +13,40 @@ import {
   Container,
   Spacer,
   Button,
+  RadioGroup,
+  Radio,
+  Slider,
+  SliderMark,
+  SliderFilledTrack,
+  SliderTrack,
+  SliderThumb,
+  Tooltip,
+  Text,
 } from "@chakra-ui/react";
 
 export default function Producto(props) {
   const [datos, set_datos] = useState({});
+  const [loteSeleccionado, setLoteSeleccionado] = useState("");
+  const [loteSize, setLoteSize] = useState(1);
+  const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  async function cambiarLoteSeleccionado(lote) {
+    const [loteNuevo, tamanio] = lote.split(",");
+    // console.log(`[${loteNuevo}] ${tamanio}`)
+    setLoteSeleccionado(loteNuevo);
+    setLoteSize(tamanio);
+    const minimo = await Math.min(tamanio, cantidadSeleccionada);
+    // console.log(`${loteSize} - ${cantidadSeleccionada} - ${minimo}`)
+    setCantidadSeleccionada(minimo);
+  }
 
   async function arrancar() {
     const llamado = await productosService.productoDetalles(props.id);
     console.log(llamado);
     set_datos(llamado);
+    setLoteSeleccionado(llamado.lotesDto[0].numeroLoteDto);
+    setLoteSize(llamado.lotesDto[0].cantidadDisponibleDto);
   }
 
   useEffect(() => {
@@ -31,7 +56,7 @@ export default function Producto(props) {
   return (
     <Grid
       mx="auto"
-      minH="500px"
+      minH="80%"
       templateRows="repeat(5, 1fr)"
       templateColumns="repeat(6, 1fr)"
       border="1px solid papayawhip"
@@ -40,13 +65,28 @@ export default function Producto(props) {
     >
       <GridItem rowSpan={3} colSpan={2} bg="papayawhip">
         <Container my="1em">
-          <Image src="keen.png" />
+          <Image
+            src={datos.urlImagenDto ? datos.urlImagenDto : ""}
+            fallbackSrc="img_placeholder.png"
+            borderColor="black"
+            borderWidth="0.2em"
+            borderStyle="solid"
+          />
         </Container>
       </GridItem>
-      <GridItem rowSpan={1} colSpan={4} bg="papayawhip">
-        <Heading mt="1em" ml="1em">
-          ${datos.precioDto}
-        </Heading>
+      <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
+        <VStack h="100%">
+          <Heading>
+            {datos.nombreDto}
+          </Heading>
+        </VStack>
+      </GridItem>
+      <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
+        <VStack h="100%" alignItems="flex-start" justifyContent="center">
+          <Heading ml="1em" fontStyle="italic" fontWeight="semibold" size="lg">
+            ${datos.precioDto}
+          </Heading>
+        </VStack>
       </GridItem>
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
         <Box fontWeight="bold" fontSize="xl" my="1em" mx="2em">
@@ -64,52 +104,102 @@ export default function Producto(props) {
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
         <Box my="1em">
           <Container>
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">lote</th>
-                  <th scope="col">cantidad</th>
-                  <th scope="col">stock</th>
-                </tr>
-              </thead>
-              <tbody>
-                {datos?.lotesDto?.map((l) => (
+            <RadioGroup
+              onChange={cambiarLoteSeleccionado}
+              value={`${loteSeleccionado},${loteSize}`}
+            >
+              <table className="table table-striped">
+                <thead>
                   <tr>
-                    <td>{l.cantidadDisponibleDto}</td>
-                    <td>{l.numeroLoteDto}</td>
-                    <td>Disponible</td>
+                    <th scope="col">Lote</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Selección</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {datos?.lotesDto?.map((l) => (
+                    <tr>
+                      <td>{l.numeroLoteDto}</td>
+                      <td>
+                        <Center>{l.cantidadDisponibleDto}</Center>
+                      </td>
+                      <td>Disponible</td> {/* TODO: Averiguar del back */}
+                      <td>
+                        <Center>
+                          <Radio
+                            borderColor="teal.600"
+                            value={`${l.numeroLoteDto},${l.cantidadDisponibleDto}`}
+                          ></Radio>
+                        </Center>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </RadioGroup>
           </Container>
         </Box>
       </GridItem>
-      <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
-        <Heading mt="0.5em">
-          <Center>{datos.nombreDto}</Center>
-        </Heading>
+      <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
+        <Center h="full">
+          <Text color="gray" fontStyle="italic" fontSize="lg">{datos.descripcionDto}</Text>
+        </Center>
       </GridItem>
-      <GridItem rowSpan={1} colSpan={3} bg="papayawhip">
-        <Box></Box>
+      <GridItem rowSpan={2} colSpan={3} bg="papayawhip" px={16}>
+        <VStack justifyContent="space-evenly" h="100%">
+          <Heading size="md">Cantidad a agregar:</Heading>
+          {loteSeleccionado && (
+            <Slider
+              id="slider"
+              min={1}
+              max={loteSize}
+              colorScheme="teal"
+              onChange={(v) => setCantidadSeleccionada(v)}
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              {[...Array(parseInt(loteSize))].map((_, i) => (
+                <SliderMark value={i + 1} mt="3" ml="-2.2" fontSize="sm">
+                  {i + 1}
+                </SliderMark>
+              ))}
+              <SliderMark
+                value={cantidadSeleccionada}
+                textAlign="center"
+                bg="blue.500"
+                color="white"
+                mt="-10"
+                ml="-6"
+                w="12"
+              >
+                {cantidadSeleccionada}
+              </SliderMark>
+              <SliderTrack bg="gray.300">
+                <SliderFilledTrack bg="blue.600" />
+              </SliderTrack>
+              <SliderThumb
+                borderWidth={1.5}
+                bg="blue.500"
+                borderColor="gray.800"
+              />
+            </Slider>
+          )}
+        </VStack>
       </GridItem>
       <GridItem rowSpan={1} colSpan={1} bg="papayawhip">
-        <Button colorScheme="teal" mt="2em" w="170px">
-          Agregar al carrito
-        </Button>
-      </GridItem>
-      <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
-        <Box>
-          <Center color="gray">{datos.descripcionDto}</Center>
-        </Box>
-      </GridItem>
-      <GridItem rowSpan={1} colSpan={3} bg="papayawhip">
-        <Box></Box>
+        <VStack h="100%" justifyContent="center">
+          <Button colorScheme="teal" w="170px">
+            Agregar al carrito
+          </Button>
+        </VStack>
       </GridItem>
       <GridItem rowSpan={1} colSpan={1} bg="papayawhip">
-        <Button colorScheme="teal" w="170px">
-          Regresar
-        </Button>
+        <VStack h="100%" justifyContent="center">
+          <Button colorScheme="teal" w="170px">
+            Regresar
+          </Button>
+        </VStack>
       </GridItem>
     </Grid>
   );

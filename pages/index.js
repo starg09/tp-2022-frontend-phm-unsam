@@ -52,7 +52,8 @@ export default function Home() {
   const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
   const toast = createStandaloneToast()
 
-  const { isOpen, onOpen, onClose } = useDisclosure() 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [ idProductoModal, setIdProductoModal] = useState(0)
 
 
 
@@ -127,6 +128,11 @@ export default function Home() {
         })
       }
     }
+  }
+
+  function abrirModalProducto(idProductoModal) {
+    setIdProductoModal(idProductoModal)
+    onOpen()
   }
 
 
@@ -275,7 +281,7 @@ export default function Home() {
                   <Text px={4} fontSize="sm" fontStyle="italic">
                     {i.descripcionDto}
                   </Text>
-                  <Button alignSelf="center" colorScheme="orange" onClick={onOpen}>
+                  <Button alignSelf="center" colorScheme="orange" onClick={() => abrirModalProducto(i.idDto)}>
                     Detalle
                   </Button>
                   <Button alignSelf="center" colorScheme="purple" onClick={async () => await agregarAlCarrito(i.idDto, i.lotesDto)}>
@@ -303,11 +309,10 @@ export default function Home() {
       </VStack>
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Detalle de Producto</ModalHeader>
+        <ModalContent bg="papayawhip">
           <ModalCloseButton />
           <ModalBody>
-            <Producto id={1} /*TODO: QUe cambie*//>
+            <Producto id={idProductoModal} />
           </ModalBody>
         </ModalContent>
       </Modal>
