@@ -1,9 +1,9 @@
 import { productosService } from "../services/productos.service";
 import { useState, useEffect } from "react";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import {
   VStack,
   HStack,
-  Flex,
   Grid,
   GridItem,
   Box,
@@ -11,7 +11,6 @@ import {
   Center,
   Heading,
   Container,
-  Spacer,
   Button,
   RadioGroup,
   Radio,
@@ -20,16 +19,14 @@ import {
   SliderFilledTrack,
   SliderTrack,
   SliderThumb,
-  Tooltip,
   Text,
 } from "@chakra-ui/react";
 
 export default function Producto(props) {
-  const [datos, set_datos] = useState({});
+  const [datos, set_datos] = useState({puntajeDto: "0"}); //TODO: Buscar solucion alternativa a inicializar este objeto?
   const [loteSeleccionado, setLoteSeleccionado] = useState("");
   const [loteSize, setLoteSize] = useState(1);
   const [cantidadSeleccionada, setCantidadSeleccionada] = useState(1);
-  const [showTooltip, setShowTooltip] = useState(false);
 
   async function cambiarLoteSeleccionado(lote) {
     const [loteNuevo, tamanio] = lote.split(",");
@@ -75,7 +72,7 @@ export default function Producto(props) {
         </Container>
       </GridItem>
       <GridItem rowSpan={1} colSpan={2} bg="papayawhip">
-        <VStack h="100%">
+        <VStack h="100%" justifyContent="center">
           <Heading>{datos.nombreDto}</Heading>
         </VStack>
       </GridItem>
@@ -88,7 +85,14 @@ export default function Producto(props) {
       </GridItem>
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
         <Box fontWeight="bold" fontSize="xl" my="1em" mx="2em">
-          {datos.puntajeDto} Estrellas
+          <HStack maxW="50%" minH="2em">
+            {[...Array(datos.puntajeDto)].map((_, n) => (
+              <AiFillStar id={`star-${n}`} />
+            ))}
+            {[...Array(5 - datos.puntajeDto)].map((_, n) => (
+              <AiOutlineStar id={`empty-star-${n}`} />
+            ))}
+          </HStack>
           <br />
           Origen: {datos.paisOrigenDto}
           <br />
@@ -100,7 +104,7 @@ export default function Producto(props) {
         </Box>
       </GridItem>
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
-        <Box my="1em">
+        <Center h="full" my="1em">
           <Container>
             <RadioGroup
               onChange={cambiarLoteSeleccionado}
@@ -137,7 +141,7 @@ export default function Producto(props) {
               </table>
             </RadioGroup>
           </Container>
-        </Box>
+        </Center>
       </GridItem>
       <GridItem rowSpan={2} colSpan={2} bg="papayawhip">
         <Center h="full">
@@ -156,8 +160,6 @@ export default function Producto(props) {
               max={loteSize}
               colorScheme="teal"
               onChange={(v) => setCantidadSeleccionada(v)}
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
             >
               {[...Array(parseInt(loteSize))].map((_, i) => (
                 <SliderMark value={i + 1} mt="3" ml="-2.2" fontSize="sm">

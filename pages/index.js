@@ -17,7 +17,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   Radio,
   RadioGroup,
@@ -139,11 +138,12 @@ export default function Home() {
           console.log(agregable);
           await usuariosService.agregarAlCarrito(agregable, idUsuario);
           toast({
-            title: "agregado al carrito",
+            title: "Agregado al carrito",
             status: "success",
             duration: 9000,
             isClosable: true,
           });
+          onClose();
         } catch (e) {
           console.log(e);
           errores.push(`Error de servidor: ${e}`);
