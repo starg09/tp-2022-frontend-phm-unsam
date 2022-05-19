@@ -84,7 +84,7 @@ export default function NavBar() {
   linksNavbar.push(ItemNavbar.NewWithLink("Home", "/"))
   if (authService.isAuthenticated()) {
     //TODO Menu de chakra
-    linksNavbar.push(ItemNavbar.NewWithAction(`Mi Carrito [${tamanioCarrito}]`, onCartOpen))
+    linksNavbar.push(ItemNavbar.NewWithAction(`Mi Carrito`, onCartOpen)) // [${tamanioCarrito}]
     linksNavbar.push(ItemNavbar.NewWithLink("Mi Perfil", "/perfilDeUsuario"))
     linksNavbar.push(ItemNavbar.NewWithAction("Logout >", authService.signout))
   } else {

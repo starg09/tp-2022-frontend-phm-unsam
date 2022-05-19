@@ -43,12 +43,9 @@ export default function Home() {
   const [busqueda, setBusqueda] = useState("");
   const [puntaje, setPuntaje] = useState("0");
 
-  //TODO: Obtener paises desde el back, incluirlos en la base de datos.
-  const listaFiltroPaises = ["Argentina", "Brasil"];
+  const [listaFiltroPaises, setlistaFiltroPaises] = useState([]);
 
-  const [checkedPaises, setCheckedPaises] = useState(
-    listaFiltroPaises.map((it) => false)
-  );
+  const [checkedPaises, setCheckedPaises] = useState([]);
   const todosOrigenes = checkedPaises.every(Boolean);
   const algunosOrigenes = checkedPaises.some(Boolean) && !todosOrigenes;
   const toast = createStandaloneToast();
@@ -62,7 +59,7 @@ export default function Home() {
       todosOrigenes ? [] : listaFiltroPaises.filter((_, n) => checkedPaises[n]),
       puntaje
     );
-    console.log(llamado);
+    // console.log(llamado);
     set_itemsReal([...llamado]);
   }
   /* 
@@ -174,6 +171,13 @@ export default function Home() {
     buscarProductos();
   }, [puntaje, checkedPaises]);
   // useEffect( () => console.log(puntaje), [puntaje])
+
+  useEffect(async () => {
+    const listaPaises = await productosService.obtenerPaisesOrigen()
+    const checksPaises = listaPaises.map((it) => true)
+    setlistaFiltroPaises(listaPaises)
+    setCheckedPaises(checksPaises)
+  }, [])
 
   return (
     <>
