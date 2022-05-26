@@ -42,6 +42,7 @@ export default function Carrito(props) {
     let confirmacion = confirm("Esta seguro de raelizar la compra?");
     if (confirmacion == true) {
       await carritoService.comprar(props.userId);
+      router.push('/')
       arrancar();
     }
   }
