@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { usuariosService } from "../services/usuario.service";
 
@@ -23,6 +23,8 @@ export default function ComprasRealizadas(props) {
 
   async function arrancar() {
     const llamado = await usuariosService.comprasUsuario(props.userId);
+    // llamado = [...llamado]
+    // llamado.forEach( (compra) => compra.fechaCompra = compra.fechaCompra.split("-").reverse().join("/"))
     set_compras([...llamado]);
   }
 
@@ -43,23 +45,31 @@ export default function ComprasRealizadas(props) {
         ) */
   return (
     <div className="w-75">
-      <Heading size={"md"}>Compras</Heading>
-      <table className="table table-striped">
+      <Heading size={"lg"} pb={6}>Compras</Heading>
+      <table className="table table-striped text-center">
         <thead>
-          <tr>
-            <th scope="col">Orden de compra</th>
-            <th scope="col">Fecha</th>
+          <tr className="px-2">
+            <th className="col-md-3" scope="col">Orden de compra</th>
+            <th className="col-md-3" scope="col">Fecha</th>
             <th scope="col">Cantidad de articulos</th>
-            <th scope="col">Importe total</th>
+            <th className="col-md-3" scope="col">Importe total</th>
           </tr>
         </thead>
         <tbody>{compras.map(
             (c) => (
-                <tr>
-                    <th scope="row">{c.ordenCompra}</th>
-                    <td>{c.fechaCompra}</td>
-                    <td>{c.cantidad}</td>
-                    <td>{c.importe}</td>
+                <tr className="px-2">
+                    <th className="px-5" scope="row">#{c.ordenCompra}</th>
+                    <td className="px-5">{c.fechaCompra.split("-").reverse().join("/")}</td>
+                    <td className="px-5">{c.cantidad}</td>
+                    <td className="px-5">
+                      ${
+                        c.importe
+                          .toLocaleString(
+                            undefined,
+                            { minimumFractionDigits: 2 }
+                          )
+                      }
+                    </td>
                 </tr>
             )
     )}</tbody>
