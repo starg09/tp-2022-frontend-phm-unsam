@@ -23,9 +23,9 @@ export default function Carrito(props) {
   }
 
   async function eliminar(item) {
-    let confirmacion = confirm(`Esta seguro de eliminar el item: "${item.nombre}" x${item.cantidad}?`);
+    let confirmacion = confirm(`Esta seguro de eliminar el item: "${item.nombre}" (Lote  #${item.lote}) x${item.cantidad}?`);
     if (confirmacion == true) {
-      await usuariosService.quitarDelCarrito(item.id, props.userId);
+      await usuariosService.quitarDelCarrito(item.id, item.lote, props.userId);
       arrancar();
     }
   }
