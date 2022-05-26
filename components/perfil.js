@@ -1,16 +1,18 @@
 import {
-  VStack,
-  HStack,
-  Heading,
   Grid,
   GridItem,
   Box,
   Avatar,
   Center,
   AspectRatio,
+  Input,
+  InputRightElement,
+  InputGroup,
+  Link,
 } from "@chakra-ui/react";
 import { usuariosService } from "../services/usuario.service";
 import { useEffect, useState } from "react";
+import { FaRegEdit, FaRegCalendarAlt, FaRegMoneyBillAlt } from "react-icons/fa";
 
 export default function Perfil(props) {
   const [datos, set_datos] = useState({});
@@ -53,35 +55,90 @@ export default function Perfil(props) {
       <GridItem rowSpan={2} colSpan={1} m="2">
         <Center w="100%" h="100%">
           <AspectRatio ratio={1} p="0.2em" w="100%" h="100%">
-          <Center>
-              <Avatar size="2xl" w="90%" h="90%" borderRadius="10%" src="keen.png" name={`${datos.nombre} ${datos.apellido}`} />
-          </Center>
+            <Center>
+              <Avatar
+                size="2xl"
+                w="90%"
+                h="90%"
+                borderRadius="10%"
+                src="keen.png"
+                name={`${datos.nombre} ${datos.apellido}`}
+              />
+            </Center>
           </AspectRatio>
         </Center>
       </GridItem>
-      <GridItem px={8} colSpan={2}>
+      <GridItem px={6} colSpan={2} alignSelf="center">
         <Box>Nombre</Box>
-        <Box bg="white" m="2" p="2" border="1px" borderColor="tomato">
-          {datos.nombre}
-        </Box>
+        <InputGroup m="2">
+          <Input
+            isReadOnly
+            bg="white"
+            border="1px"
+            borderColor="tomato"
+            focusBorderColor="tomato"
+            value={datos.nombre}
+          />
+          <InputRightElement width="3rem">
+            <Link _hover={{color:"black"}} color="grey">
+              <FaRegEdit fontSize={24} onClick={() => {}}/>
+            </Link>
+          </InputRightElement>
+        </InputGroup>
       </GridItem>
-      <GridItem px={8} colSpan={2}>
+      <GridItem px={6} colSpan={2} alignSelf="center">
         <Box>Apellido</Box>
-        <Box bg="white" m="2" p="2" border="1px" borderColor="tomato">
-          {datos.apellido}
-        </Box>
+        <InputGroup m="2">
+          <Input
+            isReadOnly
+            bg="white"
+            border="1px"
+            borderColor="tomato"
+            focusBorderColor="tomato"
+            value={datos.apellido}
+          />
+          <InputRightElement width="3rem">
+            <Link _hover={{color:"black"}} color="grey">
+              <FaRegEdit fontSize={24} onClick={() => {}}/>
+            </Link>
+          </InputRightElement>
+        </InputGroup>
       </GridItem>
-      <GridItem px={8} colSpan={2}>
+      <GridItem px={6} colSpan={2} alignSelf="center">
         <Box>Edad</Box>
-        <Box bg="white" m="2" p="2" border="1px" borderColor="tomato">
-          {edad}
-        </Box>
+        <InputGroup m="2">
+          <Input
+            isReadOnly
+            bg="white"
+            border="1px"
+            borderColor="tomato"
+            focusBorderColor="tomato"
+            value={edad}
+          />
+          <InputRightElement width="3rem">
+            <Link _hover={{color:"cyan.800"}} color="grey">
+              <FaRegCalendarAlt fontSize={24} onClick={() => {}}/>
+            </Link>
+          </InputRightElement>
+        </InputGroup>
       </GridItem>
-      <GridItem px={8} colSpan={2}>
+      <GridItem px={6} colSpan={2} alignSelf="center">
         <Box>Saldo</Box>
-        <Box bg="white" m="2" p="2" border="1px" borderColor="tomato">
-          {datos.saldo}
-        </Box>
+        <InputGroup m="2">
+          <Input
+            isReadOnly
+            bg="white"
+            border="1px"
+            borderColor="tomato"
+            focusBorderColor="tomato"
+            value={`$${datos.saldo?.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+          />
+          <InputRightElement width="3rem">
+            <Link _hover={{color:"green"}} color="grey">
+              <FaRegMoneyBillAlt fontSize={24} onClick={() => {}}/>
+            </Link>
+          </InputRightElement>
+        </InputGroup>
       </GridItem>
     </Grid>
   );
