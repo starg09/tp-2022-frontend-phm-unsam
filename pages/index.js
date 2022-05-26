@@ -123,7 +123,7 @@ export default function Home() {
       const lote = listaLotes.find(
         (l) =>
           (numLote < 0 || l.numeroLoteDto == numLote) &&
-          l.cantidadDisponibleDto > minLoteSize
+          l.cantidadDisponibleDto >= minLoteSize
       );
       if (lote == undefined)
         errores.push("No hay lotes disponibles para este producto.");
