@@ -30,6 +30,7 @@ class ProductosService {
         const producto = await axios.get(`${baseUrl}/productos/${id}/detalles`)
         return producto.data
     }
+
 }
 
 export const productosService = new ProductosService()

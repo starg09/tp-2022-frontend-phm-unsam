@@ -32,6 +32,10 @@ class UsuariosService {
     async agregarAlCarrito(agregableDto, idUser){
         await axios.put(`${baseUrl}/usuarios/${idUser}/carrito/agregar`, agregableDto)
     }
+    async enviarClick(clickData) {
+        await axios.post(`${baseUrl}/usuarios/agregarClick`, clickData)
+
+    }
 }
 
 export const usuariosService = new UsuariosService()
