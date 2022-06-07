@@ -60,10 +60,10 @@ export default function ComprasRealizadas(props) {
                 <tr className="px-2">
                     <th className="px-5" scope="row">#{c.ordenCompra}</th>
                     <td className="px-5">{c.fechaCompra.split("-").reverse().join("/")}</td>
-                    <td className="px-5">{c.cantidad}</td>
+                    <td className="px-5">{c.cantidadItems}</td>
                     <td className="px-5">
                       ${
-                        c.importe
+                        c.importeTotal
                           .toLocaleString(
                             undefined,
                             { minimumFractionDigits: 2 }
