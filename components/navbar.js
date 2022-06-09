@@ -72,6 +72,8 @@ export default function NavBar() {
 
   const [tamanioCarrito, setTamanioCarrito] = useState(0)
 
+  const [idUsuario, setIdUsuario] = useState(-1)
+
   const linksNavbar = []
   linksNavbar.push(ItemNavbar.NewWithLink("Home", "/"))
   if (authService.isAuthenticated()) {
@@ -86,6 +88,8 @@ export default function NavBar() {
 
   useEffect(() => {
     setLinks(linksNavbar);
+    if (authService.isAuthenticated())
+        setIdUsuario(localStorage.getItem("user"))
     console.log(links);
   }, []);
 
@@ -128,7 +132,7 @@ export default function NavBar() {
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>Carrito De Compras</DrawerHeader>
           <DrawerBody>
-            <Carrito userId={1} />
+            <Carrito userId={idUsuario} />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

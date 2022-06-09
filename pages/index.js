@@ -161,12 +161,12 @@ export default function Home() {
     }
   }
 
-  async function abrirModalProducto(idProductoModal, nombreProducto) {
+  function abrirModalProducto(idProductoModal, nombreProducto) {
     let clickData = {
       nombreProducto : nombreProducto,
       usuario: localStorage.getItem("user")
     }
-    await usuariosService.enviarClick(clickData)
+    usuariosService.enviarClick(clickData)
     setIdProductoModal(idProductoModal);
     onOpen();
   }
@@ -348,7 +348,7 @@ export default function Home() {
                     <Button
                       alignSelf="center"
                       colorScheme="orange"
-                      onClick={async () => await abrirModalProducto(i.idDto, i.nombreDto)}
+                      onClick={() => abrirModalProducto(i.idDto, i.nombreDto)}
                     >
                       Detalle
                     </Button>
