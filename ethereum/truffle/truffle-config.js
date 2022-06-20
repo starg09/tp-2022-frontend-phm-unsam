@@ -46,9 +46,19 @@ module.exports = {
         host: "localhost", //our network is running on localhost
         port: 8545, // port where your blockchain is running
         network_id: "*",
-        from: "0x884e8452cd8e45c0A117E6D666C6d1510160441F", // use the account-id generated during the setup process
+        from: "0xfc588C58a2845Dd4DA21f80be51B283c6C685Ec5", // use the account-id generated during the setup process
         gas: 2000000
-      }
+      },
+
+      live: {
+        host: "localhost",
+        port: 8543,             // Custom port
+        network_id: 58343,      // Custom network
+        gas: 6721975,           // Gas sent with each transaction (default: ~6700000)
+        gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+        from: '0xfc588C58a2845Dd4DA21f80be51B283c6C685Ec5',
+          // La primera cuenta que apareció en Ganache
+      },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache, geth, or parity) in a separate terminal
@@ -98,7 +108,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.5.1",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.15",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
