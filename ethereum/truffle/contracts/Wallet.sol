@@ -37,8 +37,13 @@ contract Wallet {
         _;
     }
 
+    modifier listaNoVacia(string[] memory productos) {
+        require(productos.length > 0, "La lista de productos no debe estar vacia.");
+        _;
+    }
+
     modifier onlyOwner() {
-        require(msg.sender == duenio);
+        require(msg.sender == duenio, "Solo puede agregar plata el duenio");
         _;
     }
 
@@ -46,10 +51,10 @@ contract Wallet {
         duenio = msg.sender;
     }
 
-    function comprar(address _comprador, int256 _valor, string[] memory _productos) public estadosPermitidos([Estado.Activo, Estado.Bootstrap]) {
+    function comprar(address _comprador, int256 _valor, string[] memory _productos) public positive(_valor) listaNoVacia(_productos) estadosPermitidos([Estado.Activo, Estado.Bootstrap]) {
         withdraw(_comprador, _valor);
-
-        compras[++compraCount] = Compra(compraCount, _comprador, _valor, _productos);
+        compraCount++;
+        compras[compraCount] = Compra(compraCount, _comprador, _valor, _productos);
         
     }
 
