@@ -55,7 +55,6 @@ contract Wallet {
         withdraw(_comprador, _valor);
         compraCount++;
         compras[compraCount] = Compra(compraCount, _comprador, _valor, _productos);
-        
     }
 
     // poner plata en la billetera
@@ -85,11 +84,14 @@ contract Wallet {
         return compras[_id];
     }
 
-    function promedio(address owner) public estadosPermitidos([Estado.Activo, Estado.Lectura]) view returns (int256) {
+
+    //TODO: investigar si se puede hacer mas performante
+    function promedio() public estadosPermitidos([Estado.Activo, Estado.Lectura]) view returns (int256) {
         int256 acumulador;
+        address sender = msg.sender;
         int count;
         for(uint i = 1; i <= compraCount; i++) {
-            if(owner == compras[i].comprador){
+            if(sender == compras[i].comprador){
                 count++;
                 acumulador += compras[i].valor;
             }
