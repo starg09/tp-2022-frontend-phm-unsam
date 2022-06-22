@@ -20,6 +20,8 @@ contract Wallet {
 
     mapping(uint => Compra) public compras;
 
+    mapping(address => int256[]) public impportesCompras;
+
     struct Compra {
         uint id;
         address comprador;
@@ -51,10 +53,13 @@ contract Wallet {
         duenio = msg.sender;
     }
 
+
+    //TODO?: quitar el parametro _comprador y usar msg.sender? Nota: en los tests se usaria sendTransaction(valor, productos, {from: theAccount})
     function comprar(address _comprador, int256 _valor, string[] memory _productos) public positive(_valor) listaNoVacia(_productos) estadosPermitidos([Estado.Activo, Estado.Bootstrap]) {
         withdraw(_comprador, _valor);
         compraCount++;
         compras[compraCount] = Compra(compraCount, _comprador, _valor, _productos);
+        impportesCompras[_comprador].push(_valor);
     }
 
     // poner plata en la billetera
@@ -87,6 +92,17 @@ contract Wallet {
 
     //TODO: investigar si se puede hacer mas performante
     function promedio() public estadosPermitidos([Estado.Activo, Estado.Lectura]) view returns (int256) {
+        
+        int256[] memory importes = impportesCompras[msg.sender];
+        int256 acumulador;
+        uint256 count = importes.length;
+        for(uint i = 0; i < count; i++) {
+            acumulador += importes[i];
+        }
+
+        return acumulador / int256(count);
+        
+        /*
         int256 acumulador;
         address sender = msg.sender;
         int count;
@@ -97,6 +113,7 @@ contract Wallet {
             }
         }
         return acumulador / count;
+        */
     }
 
     // FIXME: Buscar solucion alternativa (ver funcion put)
@@ -108,7 +125,7 @@ contract Wallet {
                 break;
             }
         }
-        require(passed);
+        require(passed, "El estado debe ser el apropiado.");
         _;
     }
 

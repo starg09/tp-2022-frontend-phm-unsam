@@ -16,7 +16,7 @@ contract('testeo de compras', async (accounts) => {
 
   it('al realizar una compra queda guardada', async () => {
     await walletSmartContract.comprar(theAccount, 250, ["merca", "falopa"])
-    const cantidadCompras = await walletSmartContract.compraCount()
+    const cantidadCompras = await walletSmartContract.compraCount.call()
     assert.equal(cantidadCompras, 1)
   })
 
@@ -32,19 +32,19 @@ contract('testeo de compras', async (accounts) => {
     testRejection(async () => { await walletSmartContract.comprar(theAccount, 250, []) }, 'La lista de productos no debe estar vacia.')
   })
 
-  /*TODO: investigar como hacer para que este test se ejecute correctamente (el sender en promedio tiene que ser el mismo que hace tres compras)
+  //TODO: investigar como hacer para que este test se ejecute correctamente (el sender en promedio tiene que ser el mismo que hace tres compras)
   it('el promedio es calculado correctamente', async () => {
     await walletSmartContract.comprar(theAccount, 250, ["merca", "falopa"])
     await walletSmartContract.comprar(theAccount, 250, ["merca", "falopa"])
     await walletSmartContract.comprar(theAccount, 500, ["merca", "falopa"])
     await walletSmartContract.comprar(otherAccount, 500, ["merca", "falopa"])
-    const promedio = await walletSmartContract.promedio()
+    const promedio = await walletSmartContract.promedio.call({from: theAccount})
     assert.equal(promedio, 333)
-  })*/
+  })
 
   it('la consulta de una compra trae la compra correctamente', async () => {
     await walletSmartContract.comprar(theAccount, 500, ["merca", "falopa"])
-    const compraRealizada = await walletSmartContract.consultarCompra(1)
+    const compraRealizada = await walletSmartContract.consultarCompra.call(1)
     assert.equal(compraRealizada.comprador, theAccount)
     assert.equal(compraRealizada.id, 1)
     assert.equal(compraRealizada.valor, 500)
